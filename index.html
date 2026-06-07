@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Mi Tienda</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
-<script src="https://cdn.jsdelivr.net/npm/@zxing/library@0.19.1/umd/index.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f5f0;color:#1a1a1a;}
@@ -42,39 +41,43 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 /* SCANNER */
 .scan-area{text-align:center;padding:16px 0;}
-#scanner-container{position:relative;width:100%;max-width:320px;margin:0 auto 16px;border-radius:12px;overflow:hidden;background:#000;display:none;}
-#scanner-container video{width:100%;display:block;}
-#scanner-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;}
-#scanner-overlay::before{content:'';display:block;width:200px;height:120px;border:2px solid #00ff00;border-radius:8px;box-shadow:0 0 0 2000px rgba(0,0,0,0.4);}
-.scan-line{position:absolute;width:196px;height:2px;background:linear-gradient(90deg,transparent,#00ff00,transparent);animation:scanline 1.5s ease-in-out infinite;}
-@keyframes scanline{0%,100%{top:calc(50% - 60px);}50%{top:calc(50% + 58px);}}
-.scan-btn{width:150px;height:150px;border-radius:50%;background:var(--green-bg);border:3px solid var(--green);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 16px;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform 0.15s;}
-.scan-btn:active{transform:scale(0.94);}
-.scan-btn i{font-size:56px;color:var(--green);}
-.scan-btn span{font-size:14px;color:var(--green);margin-top:4px;font-weight:700;}
-.stop-scan-btn{display:none;margin:0 auto 12px;padding:10px 24px;background:var(--red-bg);color:var(--red);border:1px solid var(--red);border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;}
+#video-container{position:relative;width:100%;max-width:340px;margin:0 auto 12px;border-radius:16px;overflow:hidden;background:#000;display:none;aspect-ratio:4/3;}
+#video-container video{width:100%;height:100%;object-fit:cover;display:block;}
+.scan-frame{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;}
+.scan-frame::before{content:'';display:block;width:220px;height:140px;border:3px solid #00ff88;border-radius:10px;box-shadow:0 0 0 2000px rgba(0,0,0,0.5);}
+.scan-line{position:absolute;width:214px;height:2px;background:linear-gradient(90deg,transparent,#00ff88,transparent);animation:scan 1.8s ease-in-out infinite;}
+@keyframes scan{0%,100%{top:calc(50% - 68px);}50%{top:calc(50% + 66px);}}
+.scan-hint-box{background:rgba(0,0,0,0.6);position:absolute;bottom:0;left:0;right:0;padding:8px;text-align:center;}
+.scan-hint-box span{color:#fff;font-size:12px;}
+
+.scan-btn{width:160px;height:160px;border-radius:50%;background:var(--green-bg);border:3px solid var(--green);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 16px;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform 0.15s;}
+.scan-btn:active{transform:scale(0.93);}
+.scan-btn i{font-size:60px;color:var(--green);}
+.scan-btn span{font-size:15px;color:var(--green);margin-top:6px;font-weight:700;}
+.stop-btn{display:none;margin:0 auto 12px;padding:12px 28px;background:var(--red-bg);color:var(--red);border:1.5px solid var(--red);border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;}
 
 .scan-result{background:#fff;border:1px solid var(--border);border-radius:12px;padding:16px;margin-top:16px;display:none;}
 .scan-result.show{display:block;}
 .scan-result .pname{font-size:18px;font-weight:600;margin-bottom:6px;}
 .scan-result .pinfo{font-size:13px;color:#666;margin-bottom:14px;line-height:1.6;white-space:pre-line;}
 .qty-row{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
-.qty-row label{font-size:14px;font-weight:500;}
+.qty-row label{font-size:15px;font-weight:600;}
 .qty-controls{display:flex;align-items:center;gap:8px;}
-.qty-controls button{width:38px;height:38px;border:1px solid var(--border);border-radius:8px;background:#fff;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
-.qty-controls input{width:60px;padding:8px;border:1px solid var(--border);border-radius:8px;font-size:16px;text-align:center;}
+.qty-controls button{width:42px;height:42px;border:1px solid var(--border);border-radius:8px;background:#fff;font-size:24px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:500;}
+.qty-controls input{width:65px;padding:8px;border:1px solid var(--border);border-radius:8px;font-size:18px;text-align:center;}
 .action-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-.action-btn{padding:13px;border-radius:10px;border:1px solid var(--border);background:#fff;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;font-weight:600;}
+.action-btn{padding:14px;border-radius:10px;border:1px solid var(--border);background:#fff;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;font-weight:600;}
 .action-btn.primary{background:var(--green-bg);border-color:var(--green);color:var(--green);}
 .action-btn.secondary{background:var(--blue-bg);border-color:var(--blue);color:var(--blue);}
 .status-msg{font-size:13px;text-align:center;margin-top:12px;padding:10px;border-radius:8px;display:none;font-weight:500;}
 .status-msg.ok{background:var(--green-bg);color:var(--green);display:block;}
 .status-msg.err{background:var(--red-bg);color:var(--red);display:block;}
 .status-msg.loading{background:#f0f0f0;color:#666;display:block;}
-.search-input{width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:10px;font-size:15px;background:#fff;color:#1a1a1a;margin-bottom:12px;-webkit-appearance:none;}
+.search-input{width:100%;padding:12px 14px;border:1px solid var(--border);border-radius:10px;font-size:16px;background:#fff;color:#1a1a1a;margin-bottom:12px;-webkit-appearance:none;}
 .search-results-list{background:#fff;border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-top:8px;}
-.search-result-item{padding:11px 14px;border-bottom:1px solid var(--border);cursor:pointer;}
+.search-result-item{padding:13px 14px;border-bottom:1px solid var(--border);cursor:pointer;}
 .search-result-item:last-child{border-bottom:none;}
+.search-result-item:active{background:#f5f5f0;}
 .setup-card{background:var(--amber-bg);border:1px solid var(--amber);border-radius:12px;padding:16px;margin-bottom:16px;}
 .setup-card h3{color:var(--amber);font-size:14px;font-weight:600;margin-bottom:8px;}
 .setup-card input{width:100%;margin-top:10px;padding:10px 12px;border:1px solid var(--amber);border-radius:8px;font-size:13px;background:#fff;}
@@ -101,6 +104,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <button onclick="showScreen('settings',this)"><i class="ti ti-settings"></i>Config</button>
   </div>
 
+  <!-- DASHBOARD -->
   <div id="screen-dashboard" class="screen active">
     <div class="period-tabs">
       <button class="active" onclick="setPeriod('day',this)">Hoy</button>
@@ -118,19 +122,21 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <button onclick="loadAll()" class="copy-btn"><i class="ti ti-refresh"></i> Actualizar datos</button>
   </div>
 
+  <!-- SCAN -->
   <div id="screen-scan" class="screen">
     <div class="scan-area">
-      <div id="scanner-container">
+      <div id="video-container">
         <video id="scanner-video" autoplay playsinline muted></video>
-        <div id="scanner-overlay"><div class="scan-line"></div></div>
+        <div class="scan-frame"><div class="scan-line"></div></div>
+        <div class="scan-hint-box"><span>Centra el código de barras en el recuadro verde</span></div>
       </div>
-      <button id="stop-scan-btn" class="stop-scan-btn" onclick="stopScanner()"><i class="ti ti-x"></i> Detener escáner</button>
-      <div class="scan-btn" id="start-scan-btn" onclick="startScanner()">
+      <div class="scan-btn" id="scan-btn" onclick="startScanner()">
         <i class="ti ti-barcode"></i>
         <span>ESCANEAR</span>
       </div>
-      <p id="scan-hint" style="font-size:13px;color:#666;line-height:1.7;">Toca el botón y apunta<br>la cámara al código de barras</p>
+      <button class="stop-btn" id="stop-btn" onclick="stopScanner()"><i class="ti ti-x"></i> Cerrar cámara</button>
     </div>
+
     <div id="scan-result-box" class="scan-result">
       <div class="pname" id="sr-name">—</div>
       <div class="pinfo" id="sr-info">—</div>
@@ -148,23 +154,27 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       </div>
       <div id="scan-status" class="status-msg"></div>
     </div>
+
     <div style="margin-top:18px;">
-      <p style="font-size:12px;font-weight:600;color:#666;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;">O buscar por nombre</p>
+      <p style="font-size:13px;font-weight:600;color:#666;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;">O buscar por nombre</p>
       <input type="search" class="search-input" id="manual-search" placeholder="🔍 Nombre del producto..." oninput="manualSearch(this.value)">
       <div id="search-results"></div>
     </div>
   </div>
 
+  <!-- INVENTORY -->
   <div id="screen-inventory" class="screen">
     <input type="search" class="search-input" id="inv-search" placeholder="🔍 Buscar producto..." oninput="filterInventory(this.value)">
     <div id="inventory-list"><div class="empty-state">Cargando...</div></div>
   </div>
 
+  <!-- RESTOCK -->
   <div id="screen-restock" class="screen">
     <div class="card"><h3>⚠️ Urgente</h3><div id="restock-list"><div class="empty-state">Cargando...</div></div></div>
     <div class="card" style="margin-top:12px;"><h3>📦 Todo el inventario</h3><div id="full-stock-list"><div class="empty-state">Cargando...</div></div></div>
   </div>
 
+  <!-- SETTINGS -->
   <div id="screen-settings" class="screen">
     <div class="setup-card">
       <h3>🔗 Conectar con Google Sheets</h3>
@@ -180,17 +190,18 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@zxing/library@0.19.1/umd/index.min.js"></script>
 <script>
 let SCRIPT_URL = localStorage.getItem('tienda_script_url') || '';
 let inventory = [], salesLog = [], currentProduct = null, currentPeriod = 'day';
-let codeReader = null, scannerActive = false, lastScanned = '';
+let codeReader = null, scanning = false, lastCode = '', lastCodeTime = 0;
 
 if (document.getElementById('script-url')) document.getElementById('script-url').value = SCRIPT_URL;
 
 function showLoading(v) { document.getElementById('loading-overlay').style.display = v ? 'flex' : 'none'; }
 
 function showScreen(id, btn) {
-  if (scannerActive) stopScanner();
+  if (scanning) stopScanner();
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
   document.getElementById('screen-' + id).classList.add('active');
@@ -207,24 +218,22 @@ function setPeriod(p, el) {
   renderDashboard();
 }
 
-// JSONP for GET requests
 function jsonpFetch(url) {
   return new Promise((resolve, reject) => {
-    const cbName = 'cb_' + Math.random().toString(36).slice(2);
+    const cb = 'cb_' + Math.random().toString(36).slice(2);
     const script = document.createElement('script');
-    const timeout = setTimeout(() => { delete window[cbName]; script.remove(); reject(new Error('timeout')); }, 10000);
-    window[cbName] = (data) => { clearTimeout(timeout); delete window[cbName]; script.remove(); resolve(data); };
-    script.src = url + (url.includes('?') ? '&' : '?') + 'callback=' + cbName;
-    script.onerror = () => { clearTimeout(timeout); reject(new Error('error')); };
+    const t = setTimeout(() => { delete window[cb]; script.remove(); reject(new Error('timeout')); }, 12000);
+    window[cb] = (data) => { clearTimeout(t); delete window[cb]; script.remove(); resolve(data); };
+    script.src = url + (url.includes('?') ? '&' : '?') + 'callback=' + cb;
+    script.onerror = () => { clearTimeout(t); reject(new Error('error')); };
     document.head.appendChild(script);
   });
 }
 
-// REGISTER SALE via GET+JSONP (solves POST/CORS issue)
 async function sendToSheet(params) {
   if (!SCRIPT_URL) return false;
   try {
-    const qs = Object.entries(params).map(([k,v]) => k + '=' + encodeURIComponent(v)).join('&');
+    const qs = Object.entries(params).map(([k,v]) => k+'='+encodeURIComponent(v)).join('&');
     const data = await jsonpFetch(SCRIPT_URL + '?' + qs);
     return data && data.ok;
   } catch(e) { return false; }
@@ -243,7 +252,7 @@ async function loadAll() {
 async function loadInventory() {
   try {
     const rows = await jsonpFetch(SCRIPT_URL + '?action=getInventory');
-    if (!Array.isArray(rows)) throw new Error('bad');
+    if (!Array.isArray(rows)) throw new Error();
     inventory = rows.slice(1).filter(r => r[1] && r[1] !== '').map(r => ({
       barcode: String(r[0]||''), name: String(r[1]||''), category: String(r[2]||''),
       costPrice: Number(r[3])||0, sellPrice: Number(r[4])||0,
@@ -266,10 +275,9 @@ async function loadSales() {
 
 function loadDemoData() {
   inventory = [
-    {barcode:'7501234567890',name:'Coca-Cola 600ml',category:'Bebidas',costPrice:17.71,sellPrice:23,initialStock:12,currentStock:12,minStock:3},
-    {barcode:'7501234567891',name:'Yakult 80ml',category:'Bebidas',costPrice:8.20,sellPrice:11,initialStock:15,currentStock:15,minStock:3},
-    {barcode:'7501234567892',name:'Agua Bonafont 600ml',category:'Bebidas',costPrice:5.75,sellPrice:8,initialStock:12,currentStock:2,minStock:3},
-    {barcode:'7501234567893',name:'Emperador Chocolate 121gr',category:'Galletas',costPrice:14.12,sellPrice:18,initialStock:3,currentStock:1,minStock:3},
+    {barcode:'7500478043804',name:'Emperador Chocolate Gamesa 121gr',category:'Galletas',costPrice:14.12,sellPrice:18,initialStock:3,currentStock:3,minStock:3},
+    {barcode:'7501055311453',name:'Cerveza Victoria Laton 473ml',category:'Bebidas',costPrice:19.28,sellPrice:25,initialStock:12,currentStock:12,minStock:3},
+    {barcode:'7501055318148',name:'Coca Cola 600ml',category:'Bebidas',costPrice:17.71,sellPrice:23,initialStock:12,currentStock:12,minStock:3},
   ];
   document.getElementById('store-subtitle').textContent = 'Modo demo — configura Google Sheets en Config';
 }
@@ -318,7 +326,7 @@ function renderRestock() {
   const low = inventory.filter(p => p.currentStock <= p.minStock);
   document.getElementById('restock-list').innerHTML = low.length === 0
     ? '<div style="font-size:13px;color:var(--green);padding:12px 0;text-align:center;">✅ No hay productos urgentes</div>'
-    : low.map(p=>`<div class="row-item"><div><div class="name">${p.name}</div><div class="meta">Tiene: ${p.currentStock} · Necesita: ${p.minStock}</div></div><button style="padding:6px 14px;background:var(--red-bg);color:var(--red);border:1px solid var(--red);border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;" onclick="goRestock('${p.barcode}')">Agregar</button></div>`).join('');
+    : low.map(p=>`<div class="row-item"><div><div class="name">${p.name}</div><div class="meta">Tiene: ${p.currentStock} · Necesita: ${p.minStock}</div></div><button style="padding:7px 14px;background:var(--red-bg);color:var(--red);border:1px solid var(--red);border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;" onclick="goRestock('${p.barcode}')">Agregar</button></div>`).join('');
   document.getElementById('full-stock-list').innerHTML = inventory.map(p => {
     const s = p.currentStock <= p.minStock ? 'danger' : p.currentStock <= p.minStock*1.5 ? 'warn' : 'ok';
     return `<div class="row-item"><div><div class="name">${p.name}</div><div class="meta">${p.currentStock} en existencia</div></div><span class="badge ${s}">${p.currentStock}</span></div>`;
@@ -330,47 +338,64 @@ function goRestock(barcode) {
   findProduct(barcode); window.scrollTo(0,0);
 }
 
-// ZXing barcode scanner
+// ---- SCANNER using getUserMedia + ZXing ----
 async function startScanner() {
   try {
-    if (!window.ZXing) { alert('El escáner está cargando, intenta en un momento.'); return; }
+    // First request camera permission via getUserMedia
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: { ideal: 'environment' }, width: { ideal: 1280 }, height: { ideal: 720 } }
+    });
+    // Got permission - now use ZXing
+    stream.getTracks().forEach(t => t.stop()); // stop the test stream
+
+    if (!window.ZXing) {
+      alert('El escáner está cargando, espera un momento e intenta de nuevo.');
+      return;
+    }
+
+    document.getElementById('video-container').style.display = 'block';
+    document.getElementById('scan-btn').style.display = 'none';
+    document.getElementById('stop-btn').style.display = 'block';
+    scanning = true;
+    lastCode = '';
+
     codeReader = new ZXing.BrowserMultiFormatReader();
     const devices = await ZXing.BrowserMultiFormatReader.listVideoInputDevices();
-    if (!devices.length) { alert('No se encontró cámara en este dispositivo.'); return; }
-    // Prefer back camera
-    const backCamera = devices.find(d => /back|rear|environment/i.test(d.label)) || devices[devices.length-1];
-    document.getElementById('scanner-container').style.display = 'block';
-    document.getElementById('start-scan-btn').style.display = 'none';
-    document.getElementById('stop-scan-btn').style.display = 'block';
-    document.getElementById('scan-hint').textContent = 'Apunta la cámara al código de barras...';
-    scannerActive = true;
-    lastScanned = '';
-    await codeReader.decodeFromVideoDevice(backCamera.deviceId, 'scanner-video', (result, err) => {
-      if (result && result.getText() !== lastScanned) {
-        lastScanned = result.getText();
-        const barcode = result.getText().replace(/\D/g,'');
-        if (barcode.length >= 8) {
-          navigator.vibrate && navigator.vibrate(100);
-          stopScanner();
-          findProduct(barcode);
-        }
+    const backCam = devices.find(d => /back|rear|environment|trasera/i.test(d.label)) || devices[devices.length - 1];
+    const deviceId = backCam ? backCam.deviceId : undefined;
+
+    await codeReader.decodeFromVideoDevice(deviceId, 'scanner-video', (result, err) => {
+      if (!result || !scanning) return;
+      const code = result.getText();
+      const now = Date.now();
+      if (code === lastCode && now - lastCodeTime < 3000) return;
+      lastCode = code;
+      lastCodeTime = now;
+      const barcode = code.replace(/\D/g, '');
+      if (barcode.length >= 6) {
+        navigator.vibrate && navigator.vibrate([100]);
+        stopScanner();
+        findProduct(barcode);
       }
     });
-  } catch(e) {
-    alert('No se pudo acceder a la cámara. Usa el buscador manual.');
-    stopScanner();
+
+  } catch(err) {
+    if (err.name === 'NotAllowedError') {
+      alert('Necesitas dar permiso a la cámara.\n\nEn Android: toca "Permitir" cuando Chrome lo pida.\nEn iPhone: ve a Ajustes > Safari > Cámara > Permitir');
+    } else {
+      alert('No se pudo acceder a la cámara. Usa el buscador manual.');
+    }
   }
 }
 
 function stopScanner() {
-  if (codeReader) { codeReader.reset(); codeReader = null; }
-  scannerActive = false;
+  scanning = false;
+  if (codeReader) { try { codeReader.reset(); } catch(e){} codeReader = null; }
   const video = document.getElementById('scanner-video');
   if (video && video.srcObject) { video.srcObject.getTracks().forEach(t => t.stop()); video.srcObject = null; }
-  document.getElementById('scanner-container').style.display = 'none';
-  document.getElementById('start-scan-btn').style.display = 'flex';
-  document.getElementById('stop-scan-btn').style.display = 'none';
-  document.getElementById('scan-hint').textContent = 'Toca el botón y apunta la cámara al código de barras';
+  document.getElementById('video-container').style.display = 'none';
+  document.getElementById('scan-btn').style.display = 'flex';
+  document.getElementById('stop-btn').style.display = 'none';
 }
 
 function findProduct(barcode) {
@@ -379,11 +404,11 @@ function findProduct(barcode) {
   document.getElementById('sr-name').textContent = prod ? prod.name : '⚠️ Producto no registrado aún';
   document.getElementById('sr-info').textContent = prod
     ? `💰 Precio: $${prod.sellPrice}  ·  📦 En stock: ${prod.currentStock} uds\n🏷️ Categoría: ${prod.category}`
-    : `Código: ${barcode}\nNo está en el inventario todavía.`;
+    : `Código detectado: ${barcode}\nNo está en el inventario todavía.`;
   document.getElementById('sr-qty').value = 1;
   document.getElementById('scan-result-box').classList.add('show');
   document.getElementById('scan-status').className = 'status-msg';
-  setTimeout(() => document.getElementById('scan-result-box').scrollIntoView({behavior:'smooth',block:'nearest'}), 100);
+  setTimeout(() => document.getElementById('scan-result-box').scrollIntoView({behavior:'smooth', block:'nearest'}), 100);
 }
 
 function manualSearch(val) {
@@ -392,7 +417,7 @@ function manualSearch(val) {
   const results = inventory.filter(p => p.name.toLowerCase().includes(val.toLowerCase()) || p.barcode.includes(val)).slice(0,6);
   el.innerHTML = results.length === 0
     ? '<div style="padding:12px;font-size:13px;color:#666;">Sin resultados</div>'
-    : '<div class="search-results-list">' + results.map(p=>`<div class="search-result-item" onclick="findProduct('${p.barcode}');document.getElementById('manual-search').value='';document.getElementById('search-results').innerHTML='';"><div style="font-weight:600;font-size:14px;">${p.name}</div><div style="font-size:12px;color:#666;">$${p.sellPrice} · Stock: ${p.currentStock} · ${p.category}</div></div>`).join('') + '</div>';
+    : '<div class="search-results-list">' + results.map(p=>`<div class="search-result-item" onclick="findProduct('${p.barcode}');document.getElementById('manual-search').value='';document.getElementById('search-results').innerHTML='';"><div style="font-weight:600;font-size:15px;">${p.name}</div><div style="font-size:13px;color:#666;">$${p.sellPrice} · Stock: ${p.currentStock} · ${p.category}</div></div>`).join('') + '</div>';
 }
 
 function changeQty(d) {
@@ -407,19 +432,13 @@ async function registerSale() {
     if (!confirm(`Solo hay ${currentProduct.currentStock} unidades. ¿Registrar igual?`)) return;
   }
   showScanStatus('Guardando venta...', 'loading');
-  // Update local state immediately
   const p = inventory.find(x => x.barcode === currentProduct.barcode);
   if (p) { p.currentStock = Math.max(0, p.currentStock - qty); currentProduct.currentStock = p.currentStock; }
   salesLog.push({date:new Date(),barcode:currentProduct.barcode,name:currentProduct.name,qty,revenue:currentProduct.sellPrice*qty,cost:currentProduct.costPrice*qty,profit:(currentProduct.sellPrice-currentProduct.costPrice)*qty});
   renderDashboard();
-  // Send to Google Sheets via JSONP GET
   if (SCRIPT_URL) {
-    const ok = await sendToSheet({action:'registerSale', barcode:currentProduct.barcode, name:currentProduct.name, qty, price:currentProduct.sellPrice, cost:currentProduct.costPrice});
-    if (ok) {
-      showScanStatus('✅ Venta registrada en Google Sheets', 'ok');
-    } else {
-      showScanStatus('✅ Venta guardada localmente (sin conexión a Sheets)', 'ok');
-    }
+    const ok = await sendToSheet({action:'registerSale',barcode:currentProduct.barcode,name:currentProduct.name,qty,price:currentProduct.sellPrice,cost:currentProduct.costPrice});
+    showScanStatus(ok ? '✅ Venta registrada en Google Sheets' : '✅ Venta guardada (sin conexión a Sheets)', 'ok');
   } else {
     showScanStatus(`✅ Venta de ${qty} "${currentProduct.name}" registrada`, 'ok');
   }
@@ -432,8 +451,8 @@ async function registerRestock() {
   const p = inventory.find(x => x.barcode === currentProduct.barcode);
   if (p) { p.currentStock += qty; currentProduct.currentStock = p.currentStock; }
   if (SCRIPT_URL) {
-    const ok = await sendToSheet({action:'registerRestock', barcode:currentProduct.barcode, name:currentProduct.name, qty, cost:currentProduct.costPrice});
-    showScanStatus(ok ? '✅ Reposición registrada en Google Sheets' : '✅ Reposición guardada localmente', 'ok');
+    const ok = await sendToSheet({action:'registerRestock',barcode:currentProduct.barcode,name:currentProduct.name,qty,cost:currentProduct.costPrice});
+    showScanStatus(ok ? '✅ Reposición registrada en Google Sheets' : '✅ Reposición guardada', 'ok');
   } else {
     showScanStatus(`✅ Reposición de ${qty} uds registrada`, 'ok');
   }
@@ -456,15 +475,15 @@ async function saveScriptUrl() {
 }
 
 async function testConnection() {
-  if (!SCRIPT_URL) { document.getElementById('conn-status').innerHTML = '<span style="color:var(--red)">No hay URL</span>'; return; }
+  if (!SCRIPT_URL) return;
   try {
     const data = await jsonpFetch(SCRIPT_URL + '?action=getDashboard');
     if (Array.isArray(data)) {
       document.getElementById('conn-status').innerHTML = '<span style="color:var(--green);font-weight:600;">✅ Conectado con Google Sheets</span>';
       loadAll();
-    } else throw new Error('bad');
+    } else throw new Error();
   } catch(e) {
-    document.getElementById('conn-status').innerHTML = '<span style="color:var(--red)">❌ Error de conexión. Verifica la URL y que el acceso sea "Cualquiera"</span>';
+    document.getElementById('conn-status').innerHTML = '<span style="color:var(--red)">❌ Error de conexión</span>';
   }
 }
 
